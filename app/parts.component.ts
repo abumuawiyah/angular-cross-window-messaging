@@ -1,93 +1,97 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 let nameParts: string[];
 @Component({
-  selector: 'table-component',
-  template: `<header>
-    Here's them rows of the table, <a (click)="openMap()">click here</a> for map window.
-    <br>
-    <button (click)="sendMessage()" [disabled]="!map">Send message</button> to the other window.
-    Messages:
-    <ul>
-      <li *ngFor="let m of messages">{{ m }}</li>
-    </ul>
-  </header>
-  <main>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Select</th>
-          <th>Name</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let row of rows">
-          <td><input type="checkbox"></td>
-          <td>{{ row.name }}</td>
-          <td>{{ row.value }}</td>
-        </tr>
-    </table>
-  </main>`,
-  styles: [`
-    main {
-      width: 100%;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .table {
-          border: 1px solid #cbcbcb;
-          width: 100%;
-    }
-    thead {
-      background-color: #d0d0d0;
-    }
-    td,
-    th {
-      border-bottom: 1px solid #cbcbcb;
-      border-collapse: collapse;
-      padding: 0
-    }
-    tr:nth-child(even) {
-      background-color: #e0e0e0;
-    }
-    a {
-      text-decoration: underline;
-    }
-  `],
+  selector: "table-component",
+  template: `
+    <header>
+      Here's them rows of the table, <a (click)="openMap()">click here</a> for
+      map window.
+      <br />
+      <button (click)="sendMessage()" [disabled]="!map">Send message</button> to
+      the other window. Messages:
+      <ul>
+        <li *ngFor="let m of messages">{{ m }}</li>
+      </ul>
+    </header>
+    <main>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td><input type="checkbox" /></td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  `,
+  styles: [
+    `
+      main {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      .table {
+        border: 1px solid #cbcbcb;
+        width: 100%;
+      }
+      thead {
+        background-color: #d0d0d0;
+      }
+      td,
+      th {
+        border-bottom: 1px solid #cbcbcb;
+        border-collapse: collapse;
+        padding: 0;
+      }
+      tr:nth-child(even) {
+        background-color: #e0e0e0;
+      }
+      a {
+        text-decoration: underline;
+      }
+    `
+  ]
 })
 export class TableComponent implements OnInit {
   rows = [];
-  mapLink = '';
+  mapLink = "";
   messages = [];
   map;
   ngOnInit() {
-    this.mapLink = window.location.href.replace(/table$/, 'map')
+    this.mapLink = window.location.href.replace(/table$/, "map");
     this.generateRows();
   }
 
   openMap() {
     console.log(this.mapLink);
-    this.map = window.open(this.mapLink, 'Map', 'width=1300,height=700'); 
-    
-    window.addEventListener('message', this.receiveMessage.bind(this));
+    this.map = window.open(this.mapLink, "Map", "width=1300,height=700");
+
+    window.addEventListener("message", this.receiveMessage.bind(this));
     return false;
   }
 
   sendMessage() {
     console.log("To send message");
-    this.map && this.map.postMessage('HI THERE', '*');
+    this.map && this.map.postMessage("HI THERE", "*");
   }
 
   private receiveMessage(event) {
-    console.log('Got message', event);
+    console.log("Got message", event);
     this.messages.push(event.data);
   }
 
   private generateRows(num = 1000) {
-    this.rows = new Array(num)
-      .fill(1)
-      .map(() => this.getRandomRow())
+    this.rows = new Array(num).fill(1).map(() => this.getRandomRow());
   }
 
   private getRandomRow() {
@@ -95,60 +99,62 @@ export class TableComponent implements OnInit {
     const value = `${this.getValue()}: ${this.getValue()} - ${this.getValue()}`;
     return {
       name,
-      value,
-    }
+      value
+    };
   }
 
   private getValue() {
-      const idx = Math.floor(Math.random() * nameParts.length);
-      return nameParts[idx]
+    const idx = Math.floor(Math.random() * nameParts.length);
+    return nameParts[idx];
   }
 }
 
 @Component({
-  selector: 'map-component',
+  selector: "map-component",
   template: `
-  <div class="map">Big ass map</div>
-  <div class="messages">
-    <button (click)="sendMessage()">Send message to main window</button>
-    <ul>
-      <li *ngFor="let m of messages">{{ m }}</li>
-    </ul>
-  </div>
+    <div class="map">Big ass map</div>
+    <div class="messages">
+      <button (click)="sendMessage()">Send message to main windowyy</button>
+      <ul>
+        <li *ngFor="let m of messages">{{ m }}</li>
+      </ul>
+    </div>
   `,
-  styles: [`
-  div {
-    display: inline-block;
-  }
-  .messages {
-    margin: 30px 10px;
-    float: left;
-    width: 150px;
-  }
-  .map {
-    height: 600px;
-    width: 600px;
-    margin: 30px auto;
-    border: 1px solid #cecece;
-    font-size: 40px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 800px;
-  }
-  `]
+  styles: [
+    `
+      div {
+        display: inline-block;
+      }
+      .messages {
+        margin: 30px 10px;
+        float: left;
+        width: 150px;
+      }
+      .map {
+        height: 600px;
+        width: 600px;
+        margin: 30px auto;
+        border: 1px solid #cecece;
+        font-size: 40px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 800px;
+      }
+    `
+  ]
 })
 export class MapComponent implements OnInit {
   messages = [];
   ngOnInit() {
-    window.addEventListener('message', this.handleMessage.bind(this));
+    window.addEventListener("message", this.handleMessage.bind(this));
   }
 
   handleMessage(event) {
-    console.log('Got msg', event);
+    console.log("Got msg", event);
     this.messages.push(event.data);
   }
   sendMessage() {
-    window.opener.postMessage(new Date().toISOString(), '*');
+    window.opener.postMessage(new Date().toISOString(), "*");
   }
 }
 
@@ -172,5 +178,4 @@ The next step, the user use the orders and plan a trip. Trip is the third compon
 At the moment I use a data service to share the data between the components, this is perhaps a part which I need to change too (as you mentioned).
 
 
-Best wishes`
-.split(/\s+/)
+Best wishes`.split(/\s+/);
